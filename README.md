@@ -128,9 +128,9 @@ redirect_stderr=true
 
 Another script using `systemctl`:
 
-- sudo touch `/etc/systemd/system/mattermost_gitlab.service`
-- 'sudo vi /etc/systemd/system/mattermost_gitlab.service`
-- Copy the following lines into /etc/systemd/system/mattermost_gitlab.service
+- `sudo chown mattermost:mattermost /usr/local/bin/mattermost_gitlab` (optional)
+- `sudo nano /etc/systemd/system/mattermost_gitlab.service`
+- Copy the following lines into `/etc/systemd/system/mattermost_gitlab.service`
 
 ```
 [Unit]
@@ -143,7 +143,7 @@ User=mattermost
 Group=mattermost
 ExecStart=/usr/local/bin/mattermost_gitlab http://mattermost/hooks/hook-id
 PrivateTmp=yes
-WorkingDirectory=/opt/mattermost
+WorkingDirectory=/opt/mattermost #for omnibus installations, use /opt/gitlab/embedded/service/mattermost
 Restart=always
 RestartSec=30
 LimitNOFILE=49152
@@ -153,8 +153,8 @@ WantedBy=multi-user.target
 ```
 
 - `systemctl daemon-reload`
-- `systemctl enable mattermost`
-- `systemctl start mattermost`
+- `systemctl enable mattermost_gitlab`
+- `systemctl start mattermost_gitlab`
 
 3. **Connect your project to your GitLab account for outgoing webhooks**
  1. Log in to GitLab account and open the project from which you want to receive updates and to which you have administrator access. From the left side of the project screen, click on **Settings** > **Web Hooks**. In the **URL** field enter `http://<your-mattermost-integration-URL>/new_event` (notice extra `new_event` URL argument). On this address the integration service will be receiving the events from your GitLab project. Make sure your URL has a leading `http://` or `https://`.
